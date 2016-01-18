@@ -2,8 +2,20 @@ $(function(){
 
   var selected; // global variable allows for comparison on picture click
 
-  // possible add-on: difficulty setting for quiz that increase list size
-  var listLength = 5;
+  // possible add-on: difficulty setting for quiz that increases list size
+  var difficulties = {
+    easy: 5,
+    medium: 10,
+    hard: 15
+  };
+  var chosenDifficulty = $("input[name=difficulty]:checked").val();
+  var listLength = difficulties[chosenDifficulty];
+
+  $(".difficulty input").on("click", function(){
+    chosenDifficulty = $("input[name=difficulty]:checked").val();
+    listLength = difficulties[chosenDifficulty];
+    newGame();
+  });
 
   $('#employee-list').delegate('.employee', 'click', function(){
     var name = $(this).find("h2").html();
