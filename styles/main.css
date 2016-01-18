@@ -1,3 +1,13 @@
-#index .container {
+*{
+	box-sizing: border-box;
+}
+
+.container {
 	margin-top: 50px;
+}
+
+.employee{
+	width: 20%;
+	float: left;
+	padding: 5px;
 }

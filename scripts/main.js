@@ -10,6 +10,7 @@ $.ajax({
         var selected = data.employees[randomselect];
         // console.log(data);
         // console.log(selected.name);
+        // asynchronous issue: sometimes randomselect doesn't compute fast enough, selected is undefined
 
         var emplsource = $("#employee-template").html();
         var empltemplate = Handlebars.compile(emplsource);
