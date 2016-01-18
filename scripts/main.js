@@ -1,94 +1,78 @@
 $(function(){
 
-  var selected;
+  var selected; // global variable allows for comparison on picture click
+
+  // possible add-on: difficulty setting for quiz that increase list size
+  var listLength = 5;
 
   $('#employee-list').delegate('.employee', 'click', function(){
     var name = $(this).find("h2").html();
-    console.log(name);
-    console.log(selected.name);
     if (name === selected.name){
-      console.log("winner");
       $(this).find(".hidden").removeClass("hidden");
       $(this).addClass("correct");
-      setTimeout(newGame, 1000);
+      setTimeout(newGame, 1000); // refresh list by running new game function
     } else {
-      console.log("choose again");
       $(this).find(".hidden").removeClass("hidden");
       $(this).addClass("incorrect");
     }
   });
 
   function newGame(){
+    // picking random number immediately to avoid asynchronous build of question template
+    // while math.random is still computing
+    var randomSelection = Math.floor((Math.random() * (listLength - 1)) + 1);
+
     $.ajax({
       url: 'http://namegame.willowtreemobile.com:2000',
       success: function(people) {
         shuffle(people);
-        getList(people, selectRandom);
-        // var data = {employees: []};
-        // for (i=0; i<5; i++){
-        //   data.employees.push(people[i]);
-        // };
-        // var randomselect = Math.floor((Math.random() * data.employees.length) + 1);
-        // selected = data.employees[randomselect];
-        // console.log(data);
-        // console.log(selected.name);
-        // asynchronous issue: sometimes randomselect doesn't compute fast enough, selected is undefined
-
-        // var emplsource = $("#employee-template").html();
-        // var empltemplate = Handlebars.compile(emplsource);
-        // $("#employee-list").html(empltemplate(data));
-
-        // selectRandom(data.employees);
+        getList(people);
       }
     });
 
+    // Fisher-Yates shuffle to randomize employee list
+    function shuffle(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
 
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
 
-  };
-
-  // Fisher-Yates shuffle to randomize employee list
-  function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
     }
-    return array;
-  }
-  function selectRandom(object){
-    console.log("running selectRandom");
-    var randomselect = Math.floor((Math.random() * object.length) + 1);
-    selected = object[randomselect];
-    if (selected){
+
+    // after shuffle, return list of first five employees
+    function getList(array){
+      var list = {employees: []};
+      for (i=0; i<listLength; i++){
+        list.employees.push(array[i]);
+      };
+      // when list is complete, run build question function
+      if (list.employees.length === listLength){
+        buildQuestion(list.employees);
+      }
+      // build handlebars template for employee list
+      var emplsource = $("#employee-template").html();
+      var empltemplate = Handlebars.compile(emplsource);
+      $("#employee-list").html(empltemplate(list));
+    }
+
+    // build handlebars template for question
+    function buildQuestion(object){
+      selected = object[randomSelection];
       var qsource = $("#question-template").html();
       var qtemplate = Handlebars.compile(qsource);
       $("#question").html(qtemplate(selected));
-    } else {
-      console.log("nothing selected");
     }
-  }
+  };
 
-  function getList(array, callback){
-    var data = {employees: []};
-    for (i=0; i<5; i++){
-      data.employees.push(array[i]);
-    };
-    if (data.employees.length === 5){
-      callback(data.employees);
-    }
-    var emplsource = $("#employee-template").html();
-    var empltemplate = Handlebars.compile(emplsource);
-    $("#employee-list").html(empltemplate(data));
-  }
-
-
+  // run newGame on window load
   newGame();
 });
