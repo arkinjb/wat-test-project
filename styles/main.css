@@ -6,10 +6,18 @@
 	margin-top: 50px;
 }
 
+#question{
+	text-align: center;
+}
+
 .employee{
 	width: 20%;
 	float: left;
 	padding: 5px;
+}
+
+.employee img{
+	width: 100%;
 }
 
 .hidden{
@@ -18,8 +26,10 @@
 
 .correct{
 	background-color: green;
+	opacity: .5;
 }
 
 .incorrect{
 	background-color: red;
+	opacity: .5;
 }

@@ -10,18 +10,30 @@ $(function(){
     if (name === selected.name){
       $(this).find(".hidden").removeClass("hidden");
       $(this).addClass("correct");
+      correctGuesses++;
+      calcScore();
       setTimeout(newGame, 1000); // refresh list by running new game function
     } else {
       $(this).find(".hidden").removeClass("hidden");
       $(this).addClass("incorrect");
+      wrongGuesses++;
+      calcScore();
     }
   });
+
+  // scoring functionality
+  var correctGuesses = 0;
+  var wrongGuesses = 0;
+  function calcScore(){
+    $("#correctscore").html("Correct Guesses: " + correctGuesses);
+    $("#wrongscore").html("Incorrect Guesses: " + wrongGuesses);
+  }
 
   function newGame(){
     // picking random number immediately to avoid asynchronous build of question template
     // while math.random is still computing
     var randomSelection = Math.floor((Math.random() * (listLength - 1)) + 1);
-
+    calcScore();
     $.ajax({
       url: 'http://namegame.willowtreemobile.com:2000',
       success: function(people) {

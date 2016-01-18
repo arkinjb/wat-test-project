@@ -10,7 +10,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="styles/bootstrap.css">
+        <!-- <link rel="stylesheet" href="styles/bootstrap.css"> -->
         <link rel="stylesheet" href="styles/main.css">
         <script src="scripts/vendor/modernizr.min.js"></script>
     </head>
@@ -18,17 +18,21 @@
         <div class="container">
           <div id="question"></div>
           <div id="employee-list"></div>
+          <div class="score">
+            <p id="correctscore"></p>
+            <p id="wrongscore"></p>
+          </div>
         </div>
 
         <!-- HANDLEBARS TEMPLATE -->
         <script id="employee-template" type="text/x-handlebars-template">
           {{#employees}}
-          <div class="employee">
+          <article class="employee">
             <img src="{{ url }}" />
             <span class="name hidden">
                 <h2>{{ name }}</h2>
             </span>
-          </div>
+          </article>
           {{/employees}}
         </script>
 
